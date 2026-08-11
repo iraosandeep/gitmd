@@ -14,11 +14,13 @@ export function parseRepoInput(input: string): RepoRef | null {
       const url = new URL(raw);
       if (!/github\.com$/i.test(url.hostname)) return null;
       const parts = url.pathname.split("/").filter(Boolean);
-      [owner, repo] = parts;
+      owner = parts[0] ?? "";
+      repo = parts[1] ?? "";
       if (parts[2] === "tree" && parts[3]) branch = parts[3];
     } else {
       const parts = raw.split("/").filter(Boolean);
-      [owner, repo] = parts;
+      owner = parts[0] ?? "";
+      repo = parts[1] ?? "";
       if (parts[2]) branch = parts[2];
     }
   } catch {
