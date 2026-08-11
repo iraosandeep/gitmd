@@ -1,5 +1,7 @@
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+import rehypeRaw from "rehype-raw";
+import rehypeSanitize from "rehype-sanitize";
 
 function resolveRelative(base: string, href: string) {
   const baseDir = base.includes("/") ? base.slice(0, base.lastIndexOf("/")) : "";
@@ -30,6 +32,7 @@ export function MarkdownView({
     <article className="prose-read reader-images">
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
+        rehypePlugins={[rehypeRaw, rehypeSanitize]}
         components={{
           a: ({ href, children, ...rest }) => {
             const target = typeof href === "string" ? href : "";
