@@ -26,13 +26,13 @@ import { SIZES, THEMES, useReaderSize, useTheme } from "@/hooks/use-reader-prefs
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "gitmd — Read any GitHub repo's docs like a book" },
+      { title: "Gitmd — Read any GitHub repo's docs like a book" },
       {
         name: "description",
         content:
           "Paste a public GitHub repo and read all of its Markdown files as a calm, e-ink styled book with the original folder structure.",
       },
-      { property: "og:title", content: "gitmd — GitHub Markdown, read like a book" },
+      { property: "og:title", content: "Gitmd — GitHub Markdown, read like a book" },
       {
         property: "og:description",
         content:
@@ -161,7 +161,7 @@ function Index() {
         <div className="w-full max-w-xl">
           <div className="mb-10 flex items-center justify-between">
             <span className="flex items-center gap-2 text-sm uppercase tracking-[0.3em] text-muted-foreground">
-              <BookOpen className="size-4" /> gitmd
+              <BookOpen className="size-4" /> Gitmd
             </span>
             {themeSwitcher}
           </div>
@@ -234,7 +234,7 @@ function Index() {
           className="flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
           <BookOpen className="size-4" />
-          <span className="hidden font-medium sm:inline">gitmd</span>
+          <span className="hidden font-medium sm:inline">Gitmd</span>
         </button>
 
         <span className="truncate text-sm text-foreground/80">
