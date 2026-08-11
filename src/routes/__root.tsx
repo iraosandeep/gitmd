@@ -77,13 +77,13 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "gitmd — Read GitHub docs like a book" },
+      { title: "Gitmd — Read GitHub docs like a book" },
       {
         name: "description",
         content:
           "Turn any public GitHub repository's Markdown files into a calm, e-ink styled reading experience.",
       },
-      { property: "og:title", content: "gitmd — Read GitHub docs like a book" },
+      { property: "og:title", content: "Gitmd — Read GitHub docs like a book" },
       {
         property: "og:description",
         content:
