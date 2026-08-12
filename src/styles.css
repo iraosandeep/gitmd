@@ -2,12 +2,14 @@
 @source "../src";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is([data-theme="ink"] *));
+@custom-variant dark (&:is([data-theme="quiet"] *, [data-theme="ink"] *));
 
 /*
  * E-ink reading design system.
- * Themes are switched with data-theme on <html>: paper | sepia | ink.
- * All colors are oklch semantic tokens; never hardcode colors in components.
+ * Themes are switched with data-theme on <html>:
+ *   original | paper | sepia | calm | focus | quiet | ink
+ * (quiet and ink are the dark themes). All colors are oklch semantic
+ * tokens; never hardcode colors in components.
  */
 
 @theme inline {
@@ -40,9 +42,62 @@
   --font-mono-read: "IBM Plex Mono", ui-monospace, SFMono-Regular, monospace;
 }
 
-:root,
-[data-theme="paper"] {
+:root {
   --radius: 0.25rem;
+  /* Reading typography defaults; overridden at runtime by the reader controls. */
+  --reader-font: var(--font-serif-read);
+  --reader-weight: 400;
+}
+
+/* Original — bright white, high-contrast ink */
+:root,
+[data-theme="original"] {
+  --background: oklch(0.995 0 0);
+  --foreground: oklch(0.2 0 0);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.2 0 0);
+  --popover: oklch(1 0 0);
+  --popover-foreground: oklch(0.2 0 0);
+  --primary: oklch(0.24 0 0);
+  --primary-foreground: oklch(0.99 0 0);
+  --secondary: oklch(0.955 0 0);
+  --secondary-foreground: oklch(0.24 0 0);
+  --muted: oklch(0.955 0 0);
+  --muted-foreground: oklch(0.5 0 0);
+  --accent: oklch(0.92 0 0);
+  --accent-foreground: oklch(0.2 0 0);
+  --destructive: oklch(0.52 0.14 27);
+  --destructive-foreground: oklch(0.99 0 0);
+  --border: oklch(0.9 0 0);
+  --input: oklch(0.9 0 0);
+  --ring: oklch(0.6 0 0);
+}
+
+/* Quiet — dark charcoal, soft light ink (dark theme) */
+[data-theme="quiet"] {
+  --background: oklch(0.25 0.003 260);
+  --foreground: oklch(0.84 0.004 260);
+  --card: oklch(0.29 0.004 260);
+  --card-foreground: oklch(0.84 0.004 260);
+  --popover: oklch(0.29 0.004 260);
+  --popover-foreground: oklch(0.84 0.004 260);
+  --primary: oklch(0.84 0.004 260);
+  --primary-foreground: oklch(0.25 0.003 260);
+  --secondary: oklch(0.33 0.004 260);
+  --secondary-foreground: oklch(0.84 0.004 260);
+  --muted: oklch(0.33 0.004 260);
+  --muted-foreground: oklch(0.64 0.004 260);
+  --accent: oklch(0.36 0.005 260);
+  --accent-foreground: oklch(0.9 0.004 260);
+  --destructive: oklch(0.62 0.15 25);
+  --destructive-foreground: oklch(0.95 0.004 260);
+  --border: oklch(0.38 0.004 260);
+  --input: oklch(0.38 0.004 260);
+  --ring: oklch(0.55 0.004 260);
+}
+
+/* Paper — warm off-white (the original GitMD default) */
+[data-theme="paper"] {
   --background: oklch(0.965 0.006 90);
   --foreground: oklch(0.24 0.006 80);
   --card: oklch(0.985 0.004 90);
@@ -64,6 +119,7 @@
   --ring: oklch(0.6 0.01 85);
 }
 
+/* Sepia — warm aged-paper tan */
 [data-theme="sepia"] {
   --background: oklch(0.93 0.028 82);
   --foreground: oklch(0.29 0.03 55);
@@ -86,6 +142,53 @@
   --ring: oklch(0.6 0.03 65);
 }
 
+/* Calm — warm sand/tan */
+[data-theme="calm"] {
+  --background: oklch(0.89 0.028 82);
+  --foreground: oklch(0.29 0.03 55);
+  --card: oklch(0.92 0.026 84);
+  --card-foreground: oklch(0.29 0.03 55);
+  --popover: oklch(0.92 0.026 84);
+  --popover-foreground: oklch(0.29 0.03 55);
+  --primary: oklch(0.36 0.05 55);
+  --primary-foreground: oklch(0.92 0.026 84);
+  --secondary: oklch(0.85 0.032 80);
+  --secondary-foreground: oklch(0.32 0.04 55);
+  --muted: oklch(0.85 0.032 80);
+  --muted-foreground: oklch(0.5 0.03 60);
+  --accent: oklch(0.82 0.04 78);
+  --accent-foreground: oklch(0.3 0.04 55);
+  --destructive: oklch(0.5 0.14 30);
+  --destructive-foreground: oklch(0.92 0.026 84);
+  --border: oklch(0.79 0.034 78);
+  --input: oklch(0.79 0.034 78);
+  --ring: oklch(0.58 0.03 65);
+}
+
+/* Focus — soft cream/ivory */
+[data-theme="focus"] {
+  --background: oklch(0.965 0.02 96);
+  --foreground: oklch(0.26 0.012 80);
+  --card: oklch(0.985 0.016 96);
+  --card-foreground: oklch(0.26 0.012 80);
+  --popover: oklch(0.985 0.016 96);
+  --popover-foreground: oklch(0.26 0.012 80);
+  --primary: oklch(0.3 0.015 80);
+  --primary-foreground: oklch(0.98 0.014 96);
+  --secondary: oklch(0.93 0.022 94);
+  --secondary-foreground: oklch(0.3 0.015 80);
+  --muted: oklch(0.93 0.022 94);
+  --muted-foreground: oklch(0.52 0.014 85);
+  --accent: oklch(0.91 0.026 92);
+  --accent-foreground: oklch(0.28 0.014 80);
+  --destructive: oklch(0.52 0.14 27);
+  --destructive-foreground: oklch(0.98 0.014 96);
+  --border: oklch(0.88 0.022 92);
+  --input: oklch(0.88 0.022 92);
+  --ring: oklch(0.6 0.02 88);
+}
+
+/* Ink — near-black, high-contrast dark theme */
 [data-theme="ink"] {
   --background: oklch(0.18 0.004 260);
   --foreground: oklch(0.86 0.004 260);
@@ -130,7 +233,8 @@
 
 /* Reading surface: e-ink inspired typography */
 @utility prose-read {
-  font-family: var(--font-serif-read);
+  font-family: var(--reader-font, var(--font-serif-read));
+  font-weight: var(--reader-weight, 400);
   font-size: var(--reader-size, 1.125rem);
   line-height: 1.78;
   letter-spacing: 0.003em;
@@ -140,7 +244,7 @@
   & h2,
   & h3,
   & h4 {
-    font-family: var(--font-serif-read);
+    font-family: var(--reader-font, var(--font-serif-read));
     font-weight: 600;
     line-height: 1.25;
     letter-spacing: -0.01em;
@@ -242,6 +346,15 @@
     display: block;
     margin: 0.4em auto 1.2em;
   }
+  & video {
+    display: block;
+    max-width: 100%;
+    height: auto;
+    margin: 0.4em auto 1.2em;
+    border-radius: var(--radius-md);
+    background: var(--color-secondary);
+    filter: var(--reader-img-filter, none);
+  }
   & div[align="center"],
   & p[align="center"] {
     display: flex;
@@ -281,15 +394,12 @@
     inset: 0;
     pointer-events: none;
     opacity: 0.35;
-    background-image: radial-gradient(
-      circle at 1px 1px,
-      var(--color-border) 0.5px,
-      transparent 0
-    );
+    background-image: radial-gradient(circle at 1px 1px, var(--color-border) 0.5px, transparent 0);
     background-size: 4px 4px;
   }
 }
 
+[data-theme="quiet"] .reader-images,
 [data-theme="ink"] .reader-images {
   --reader-img-filter: brightness(0.85) contrast(0.95);
 }

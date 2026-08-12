@@ -1,0 +1,165 @@
+import { Check, RotateCcw, Type } from "lucide-react";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Slider } from "@/components/ui/slider";
+import { Switch } from "@/components/ui/switch";
+import {
+  DEFAULT_BOLD,
+  DEFAULT_FONT,
+  DEFAULT_SIZE,
+  DEFAULT_THEME,
+  FONT_LIST,
+  SIZE_MAX,
+  SIZE_MIN,
+  SIZE_STEP,
+  THEME_LIST,
+  type Theme,
+} from "@/hooks/use-reader-prefs";
+
+type Props = {
+  theme: Theme;
+  setTheme: (t: Theme) => void;
+  font: string;
+  setFont: (f: string) => void;
+  bold: boolean;
+  setBold: (b: boolean) => void;
+  size: number;
+  setSize: (s: number) => void;
+};
+
+export function ReaderSettings({
+  theme,
+  setTheme,
+  font,
+  setFont,
+  bold,
+  setBold,
+  size,
+  setSize,
+}: Props) {
+  const reset = () => {
+    setTheme(DEFAULT_THEME);
+    setFont(DEFAULT_FONT);
+    setBold(DEFAULT_BOLD);
+    setSize(DEFAULT_SIZE);
+  };
+
+  return (
+    <Popover>
+      <PopoverTrigger
+        className="flex items-center gap-1.5 rounded-sm border border-border bg-card px-2.5 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
+        aria-label="Reading settings"
+        title="Reading settings"
+      >
+        <Type className="size-3.5" />
+        <span className="text-[0.7rem] uppercase tracking-widest">Aa</span>
+      </PopoverTrigger>
+      <PopoverContent
+        align="end"
+        className="w-[19rem] space-y-5"
+        onOpenAutoFocus={(e) => e.preventDefault()}
+      >
+        {/* Theme grid */}
+        <section>
+          <p className="mb-2 text-[0.65rem] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+            Theme
+          </p>
+          <div className="grid grid-cols-3 gap-2">
+            {THEME_LIST.map((t) => {
+              const selected = theme === t.id;
+              return (
+                <button
+                  key={t.id}
+                  onClick={() => setTheme(t.id)}
+                  data-theme={t.id}
+                  aria-pressed={selected}
+                  className={`flex flex-col items-center gap-1 rounded-md border px-2 py-3 transition-all ${
+                    selected
+                      ? "border-foreground ring-1 ring-foreground"
+                      : "border-border hover:border-muted-foreground"
+                  }`}
+                  style={{ backgroundColor: "var(--background)", color: "var(--foreground)" }}
+                >
+                  <span
+                    className="font-[family-name:var(--font-serif-read)] text-xl leading-none"
+                    style={{ fontWeight: 500 }}
+                  >
+                    Aa
+                  </span>
+                  <span className="text-[0.65rem]" style={{ color: "var(--muted-foreground)" }}>
+                    {t.label}
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Font */}
+        <section>
+          <p className="mb-2 text-[0.65rem] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+            Font
+          </p>
+          <div className="flex flex-col gap-1">
+            {FONT_LIST.map((f) => {
+              const selected = font === f.id;
+              return (
+                <button
+                  key={f.id}
+                  onClick={() => setFont(f.id)}
+                  aria-pressed={selected}
+                  className={`flex items-center justify-between rounded-sm px-2.5 py-2 text-left transition-colors ${
+                    selected ? "bg-accent text-accent-foreground" : "hover:bg-secondary"
+                  }`}
+                  style={{ fontFamily: f.stack }}
+                >
+                  <span className="text-base">{f.label}</span>
+                  {selected && <Check className="size-4 shrink-0" />}
+                </button>
+              );
+            })}
+          </div>
+        </section>
+
+        {/* Text size */}
+        <section>
+          <div className="mb-2 flex items-center justify-between">
+            <p className="text-[0.65rem] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+              Text size
+            </p>
+            <span className="text-[0.7rem] text-muted-foreground">
+              {Math.round((size / DEFAULT_SIZE) * 100)}%
+            </span>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-muted-foreground">A</span>
+            <Slider
+              value={[size]}
+              min={SIZE_MIN}
+              max={SIZE_MAX}
+              step={SIZE_STEP}
+              onValueChange={([next]) => setSize(next!)}
+              aria-label="Text size"
+            />
+            <span className="text-lg text-muted-foreground">A</span>
+          </div>
+        </section>
+
+        {/* Bold text */}
+        <section className="flex items-center justify-between">
+          <label htmlFor="bold-text" className="text-sm text-foreground">
+            Bold text
+          </label>
+          <Switch id="bold-text" checked={bold} onCheckedChange={setBold} />
+        </section>
+
+        <button
+          onClick={reset}
+          className="flex w-full items-center justify-center gap-1.5 rounded-sm border border-border bg-card py-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <RotateCcw className="size-3.5" />
+          Reset to defaults
+        </button>
+      </PopoverContent>
+    </Popover>
+  );
+}
