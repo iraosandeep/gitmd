@@ -2,7 +2,6 @@ import { useEffect, useMemo, useState } from "react";
 import { createFileRoute } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import {
-  BookOpen,
   ChevronLeft,
   ChevronRight,
   Github,
@@ -22,7 +21,17 @@ import {
   prettyName,
   type RepoRef,
 } from "@/lib/github";
-import { useBoldText, useReaderFont, useReaderSize, useTheme } from "@/hooks/use-reader-prefs";
+import {
+  useBoldText,
+  useReaderFont,
+  useReaderSize,
+  useSidebarCollapsed,
+  useTheme,
+} from "@/hooks/use-reader-prefs";
+
+function AppLogo({ className = "size-4" }: { className?: string }) {
+  return <img src="/favicon.svg" alt="" className={`${className} rounded-[3px]`} />;
+}
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -57,12 +66,12 @@ function Index() {
   const { size, setSize } = useReaderSize();
   const { font, setFont } = useReaderFont();
   const { bold, setBold } = useBoldText();
+  const { collapsed, setCollapsed } = useSidebarCollapsed();
 
   const [input, setInput] = useState("https://github.com/humanlayer/12-factor-agents");
   const [repo, setRepo] = useState<RepoRef | null>(null);
   const [active, setActive] = useState<string | null>(null);
   const [sidebar, setSidebar] = useState(false);
-  const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
     const hash = window.location.hash.slice(1);
@@ -158,7 +167,7 @@ function Index() {
         <div className="w-full max-w-xl">
           <div className="mb-10 flex items-center justify-between">
             <span className="flex items-center gap-2 text-sm uppercase tracking-[0.3em] text-muted-foreground">
-              <BookOpen className="size-4" /> GitMD
+              <AppLogo className="size-12" /> GitMD
             </span>
             {readerSettings}
           </div>
@@ -223,7 +232,7 @@ function Index() {
         </button>
 
         <button
-          onClick={() => setCollapsed((v) => !v)}
+          onClick={() => setCollapsed(!collapsed)}
           className="hidden rounded-sm p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground lg:block"
           aria-label={collapsed ? "Show contents" : "Hide contents"}
           title={collapsed ? "Show contents" : "Hide contents"}
@@ -239,8 +248,8 @@ function Index() {
           }}
           className="flex items-center gap-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
         >
-          <BookOpen className="size-4" />
-          <span className="hidden font-medium sm:inline">GitMD</span>
+          <AppLogo className="size-6" />
+          {/*<span className="hidden font-medium sm:inline">GitMD</span>*/}
         </button>
 
         <span className="truncate text-sm text-foreground/80">

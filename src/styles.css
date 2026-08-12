@@ -2,14 +2,14 @@
 @source "../src";
 @import "tw-animate-css";
 
-@custom-variant dark (&:is([data-theme="quiet"] *));
+@custom-variant dark (&:is([data-theme="quiet"] *, [data-theme="ink"] *));
 
 /*
  * E-ink reading design system.
  * Themes are switched with data-theme on <html>:
- *   original | quiet | paper | bold | calm | focus
- * (quiet is the dark theme). All colors are oklch semantic tokens;
- * never hardcode colors in components.
+ *   original | paper | sepia | calm | focus | quiet | ink
+ * (quiet and ink are the dark themes). All colors are oklch semantic
+ * tokens; never hardcode colors in components.
  */
 
 @theme inline {
@@ -119,28 +119,27 @@
   --ring: oklch(0.6 0.01 85);
 }
 
-/* Bold — bright white with heavier ink weight */
-[data-theme="bold"] {
-  --reader-weight: 600;
-  --background: oklch(0.99 0 0);
-  --foreground: oklch(0.15 0 0);
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.15 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.15 0 0);
-  --primary: oklch(0.15 0 0);
-  --primary-foreground: oklch(0.99 0 0);
-  --secondary: oklch(0.95 0 0);
-  --secondary-foreground: oklch(0.15 0 0);
-  --muted: oklch(0.95 0 0);
-  --muted-foreground: oklch(0.42 0 0);
-  --accent: oklch(0.9 0 0);
-  --accent-foreground: oklch(0.15 0 0);
-  --destructive: oklch(0.5 0.15 27);
-  --destructive-foreground: oklch(0.99 0 0);
-  --border: oklch(0.86 0 0);
-  --input: oklch(0.86 0 0);
-  --ring: oklch(0.5 0 0);
+/* Sepia — warm aged-paper tan */
+[data-theme="sepia"] {
+  --background: oklch(0.93 0.028 82);
+  --foreground: oklch(0.29 0.03 55);
+  --card: oklch(0.95 0.024 84);
+  --card-foreground: oklch(0.29 0.03 55);
+  --popover: oklch(0.95 0.024 84);
+  --popover-foreground: oklch(0.29 0.03 55);
+  --primary: oklch(0.36 0.05 55);
+  --primary-foreground: oklch(0.95 0.024 84);
+  --secondary: oklch(0.89 0.03 80);
+  --secondary-foreground: oklch(0.32 0.04 55);
+  --muted: oklch(0.89 0.03 80);
+  --muted-foreground: oklch(0.52 0.03 60);
+  --accent: oklch(0.86 0.038 78);
+  --accent-foreground: oklch(0.3 0.04 55);
+  --destructive: oklch(0.5 0.14 30);
+  --destructive-foreground: oklch(0.95 0.024 84);
+  --border: oklch(0.83 0.032 78);
+  --input: oklch(0.83 0.032 78);
+  --ring: oklch(0.6 0.03 65);
 }
 
 /* Calm — warm sand/tan */
@@ -187,6 +186,29 @@
   --border: oklch(0.88 0.022 92);
   --input: oklch(0.88 0.022 92);
   --ring: oklch(0.6 0.02 88);
+}
+
+/* Ink — near-black, high-contrast dark theme */
+[data-theme="ink"] {
+  --background: oklch(0.18 0.004 260);
+  --foreground: oklch(0.86 0.004 260);
+  --card: oklch(0.21 0.004 260);
+  --card-foreground: oklch(0.86 0.004 260);
+  --popover: oklch(0.21 0.004 260);
+  --popover-foreground: oklch(0.86 0.004 260);
+  --primary: oklch(0.86 0.004 260);
+  --primary-foreground: oklch(0.18 0.004 260);
+  --secondary: oklch(0.26 0.004 260);
+  --secondary-foreground: oklch(0.86 0.004 260);
+  --muted: oklch(0.26 0.004 260);
+  --muted-foreground: oklch(0.62 0.004 260);
+  --accent: oklch(0.29 0.005 260);
+  --accent-foreground: oklch(0.9 0.004 260);
+  --destructive: oklch(0.62 0.15 25);
+  --destructive-foreground: oklch(0.95 0.004 260);
+  --border: oklch(0.32 0.004 260);
+  --input: oklch(0.32 0.004 260);
+  --ring: oklch(0.5 0.004 260);
 }
 
 @layer base {
@@ -377,7 +399,8 @@
   }
 }
 
-[data-theme="quiet"] .reader-images {
+[data-theme="quiet"] .reader-images,
+[data-theme="ink"] .reader-images {
   --reader-img-filter: brightness(0.85) contrast(0.95);
 }
 

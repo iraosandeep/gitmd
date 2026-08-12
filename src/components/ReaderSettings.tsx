@@ -1,7 +1,19 @@
-import { Check, Minus, Plus, Type } from "lucide-react";
+import { Check, RotateCcw, Type } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import { FONT_LIST, SIZES, THEME_LIST, type Theme } from "@/hooks/use-reader-prefs";
+import {
+  DEFAULT_BOLD,
+  DEFAULT_FONT,
+  DEFAULT_SIZE,
+  DEFAULT_THEME,
+  FONT_LIST,
+  SIZE_MAX,
+  SIZE_MIN,
+  SIZE_STEP,
+  THEME_LIST,
+  type Theme,
+} from "@/hooks/use-reader-prefs";
 
 type Props = {
   theme: Theme;
@@ -24,7 +36,12 @@ export function ReaderSettings({
   size,
   setSize,
 }: Props) {
-  const sizeIndex = SIZES.indexOf(size as never);
+  const reset = () => {
+    setTheme(DEFAULT_THEME);
+    setFont(DEFAULT_FONT);
+    setBold(DEFAULT_BOLD);
+    setSize(DEFAULT_SIZE);
+  };
 
   return (
     <Popover>
@@ -64,7 +81,7 @@ export function ReaderSettings({
                 >
                   <span
                     className="font-[family-name:var(--font-serif-read)] text-xl leading-none"
-                    style={{ fontWeight: t.id === "bold" ? 700 : 500 }}
+                    style={{ fontWeight: 500 }}
                   >
                     Aa
                   </span>
@@ -104,30 +121,26 @@ export function ReaderSettings({
         </section>
 
         {/* Text size */}
-        <section className="flex items-center justify-between">
-          <p className="text-[0.65rem] font-medium uppercase tracking-[0.2em] text-muted-foreground">
-            Text size
-          </p>
-          <div className="flex items-center gap-0.5 rounded-sm border border-border bg-card p-0.5">
-            <button
-              onClick={() => setSize(SIZES[Math.max(0, sizeIndex - 1)]!)}
-              disabled={sizeIndex <= 0}
-              className="rounded-[3px] px-1.5 py-1 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40"
-              aria-label="Decrease text size"
-            >
-              <Minus className="size-3.5" />
-            </button>
-            <span className="px-1 text-[0.7rem] uppercase tracking-widest text-muted-foreground">
-              Aa
+        <section>
+          <div className="mb-2 flex items-center justify-between">
+            <p className="text-[0.65rem] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+              Text size
+            </p>
+            <span className="text-[0.7rem] text-muted-foreground">
+              {Math.round((size / DEFAULT_SIZE) * 100)}%
             </span>
-            <button
-              onClick={() => setSize(SIZES[Math.min(SIZES.length - 1, sizeIndex + 1)]!)}
-              disabled={sizeIndex >= SIZES.length - 1}
-              className="rounded-[3px] px-1.5 py-1 text-muted-foreground transition-colors hover:text-foreground disabled:opacity-40"
-              aria-label="Increase text size"
-            >
-              <Plus className="size-3.5" />
-            </button>
+          </div>
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-muted-foreground">A</span>
+            <Slider
+              value={[size]}
+              min={SIZE_MIN}
+              max={SIZE_MAX}
+              step={SIZE_STEP}
+              onValueChange={([next]) => setSize(next!)}
+              aria-label="Text size"
+            />
+            <span className="text-lg text-muted-foreground">A</span>
           </div>
         </section>
 
@@ -138,6 +151,14 @@ export function ReaderSettings({
           </label>
           <Switch id="bold-text" checked={bold} onCheckedChange={setBold} />
         </section>
+
+        <button
+          onClick={reset}
+          className="flex w-full items-center justify-center gap-1.5 rounded-sm border border-border bg-card py-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
+        >
+          <RotateCcw className="size-3.5" />
+          Reset to defaults
+        </button>
       </PopoverContent>
     </Popover>
   );

@@ -8,26 +8,23 @@ export type ThemeMeta = { id: string; label: string; dark: boolean };
 
 export const THEME_LIST: ThemeMeta[] = [
   { id: "original", label: "Original", dark: false },
-  { id: "quiet", label: "Quiet", dark: true },
   { id: "paper", label: "Paper", dark: false },
-  { id: "bold", label: "Bold", dark: false },
+  { id: "sepia", label: "Sepia", dark: false },
   { id: "calm", label: "Calm", dark: false },
   { id: "focus", label: "Focus", dark: false },
+  { id: "quiet", label: "Quiet", dark: true },
+  { id: "ink", label: "Ink", dark: true },
 ];
 
 export const THEMES = THEME_LIST.map((t) => t.id) as readonly string[];
 export type Theme = (typeof THEME_LIST)[number]["id"];
 
 const THEME_KEY = "mdbook.theme";
-const DEFAULT_THEME = "paper";
-
-// Map legacy theme ids to their closest current equivalent.
-const LEGACY_THEME: Record<string, string> = { sepia: "calm", ink: "quiet" };
+export const DEFAULT_THEME = "paper";
 
 function normalizeTheme(value: string | null): Theme {
   if (!value) return DEFAULT_THEME;
-  const mapped = LEGACY_THEME[value] ?? value;
-  return THEMES.includes(mapped) ? mapped : DEFAULT_THEME;
+  return THEMES.includes(value) ? value : DEFAULT_THEME;
 }
 
 export function useTheme() {
@@ -64,10 +61,11 @@ export const FONT_LIST: FontMeta[] = [
     label: "Atkinson",
     stack: '"Atkinson Hyperlegible", ui-sans-serif, system-ui, sans-serif',
   },
+  { id: "mono", label: "Mono", stack: '"IBM Plex Mono", ui-monospace, SFMono-Regular, monospace' },
 ];
 
 const FONT_KEY = "mdbook.font";
-const DEFAULT_FONT = "literata";
+export const DEFAULT_FONT = "literata";
 
 function applyFont(id: string) {
   const font = FONT_LIST.find((f) => f.id === id) ?? FONT_LIST[0]!;
@@ -98,6 +96,7 @@ export function useReaderFont() {
  * ------------------------------------------------------------------ */
 
 const BOLD_KEY = "mdbook.bold";
+export const DEFAULT_BOLD = false;
 
 function applyBold(on: boolean) {
   document.documentElement.style.setProperty("--reader-weight", on ? "500" : "400");
@@ -126,10 +125,13 @@ export function useBoldText() {
  * ------------------------------------------------------------------ */
 
 const SIZE_KEY = "mdbook.size";
-export const SIZES = [1, 1.125, 1.25, 1.4] as const;
+export const SIZE_MIN = 0.875;
+export const SIZE_MAX = 1.5;
+export const SIZE_STEP = 0.025;
+export const DEFAULT_SIZE = 1.125;
 
 export function useReaderSize() {
-  const [size, setSizeState] = useState<number>(1.125);
+  const [size, setSizeState] = useState<number>(DEFAULT_SIZE);
 
   useEffect(() => {
     const stored = Number(window.localStorage.getItem(SIZE_KEY));
@@ -146,4 +148,25 @@ export function useReaderSize() {
   }, []);
 
   return { size, setSize };
+}
+
+/* ------------------------------------------------------------------ *
+ * Sidebar collapsed state (desktop)
+ * ------------------------------------------------------------------ */
+
+const SIDEBAR_COLLAPSED_KEY = "mdbook.sidebarCollapsed";
+
+export function useSidebarCollapsed() {
+  const [collapsed, setCollapsedState] = useState(false);
+
+  useEffect(() => {
+    setCollapsedState(window.localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === "1");
+  }, []);
+
+  const setCollapsed = useCallback((next: boolean) => {
+    setCollapsedState(next);
+    window.localStorage.setItem(SIDEBAR_COLLAPSED_KEY, next ? "1" : "0");
+  }, []);
+
+  return { collapsed, setCollapsed };
 }
