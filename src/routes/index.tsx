@@ -227,6 +227,16 @@ function Index() {
         </button>
 
         <button
+          onClick={() => setCollapsed((v) => !v)}
+          className="hidden rounded-sm p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground lg:block"
+          aria-label={collapsed ? "Show contents" : "Hide contents"}
+          title={collapsed ? "Show contents" : "Hide contents"}
+        >
+          {collapsed ? <PanelLeftOpen className="size-4" /> : <PanelLeftClose className="size-4" />}
+        </button>
+
+
+        <button
           onClick={() => {
             setRepo(null);
             setActive(null);
