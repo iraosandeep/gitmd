@@ -340,6 +340,8 @@ function Index() {
                   currentPath={active}
                   rawBase={rawBase}
                   files={files}
+                  owner={repo.owner}
+                  repo={repo.repo}
                   onNavigate={open}
                 />
 
