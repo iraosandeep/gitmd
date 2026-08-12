@@ -8,6 +8,8 @@ import {
   Github,
   Loader2,
   Menu,
+  PanelLeftClose,
+  PanelLeftOpen,
   Minus,
   Plus,
   X,
@@ -61,6 +63,7 @@ function Index() {
   const [repo, setRepo] = useState<RepoRef | null>(null);
   const [active, setActive] = useState<string | null>(null);
   const [sidebar, setSidebar] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
     const hash = window.location.hash.slice(1);
@@ -226,6 +229,16 @@ function Index() {
         </button>
 
         <button
+          onClick={() => setCollapsed((v) => !v)}
+          className="hidden rounded-sm p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground lg:block"
+          aria-label={collapsed ? "Show contents" : "Hide contents"}
+          title={collapsed ? "Show contents" : "Hide contents"}
+        >
+          {collapsed ? <PanelLeftOpen className="size-4" /> : <PanelLeftClose className="size-4" />}
+        </button>
+
+
+        <button
           onClick={() => {
             setRepo(null);
             setActive(null);
@@ -278,9 +291,9 @@ function Index() {
 
       <div className="flex flex-1">
         <aside
-          className={`fixed inset-y-0 left-0 top-[49px] z-20 w-72 border-r border-border bg-card transition-transform lg:sticky lg:top-[49px] lg:h-[calc(100vh-49px)] lg:translate-x-0 ${
+          className={`fixed inset-y-0 left-0 top-[49px] z-20 w-72 shrink-0 overflow-hidden border-r border-border bg-card transition-transform lg:sticky lg:top-[49px] lg:h-[calc(100vh-49px)] lg:translate-x-0 lg:transition-all ${
             sidebar ? "translate-x-0" : "-translate-x-full"
-          }`}
+          } ${collapsed ? "lg:w-0 lg:border-r-0" : "lg:w-72"}`}
         >
           {treeQuery.isLoading ? (
             <div className="flex h-full items-center justify-center text-muted-foreground">
@@ -327,6 +340,8 @@ function Index() {
                   currentPath={active}
                   rawBase={rawBase}
                   files={files}
+                  owner={repo.owner}
+                  repo={repo.repo}
                   onNavigate={open}
                 />
 
