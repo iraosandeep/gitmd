@@ -291,9 +291,9 @@ function Index() {
 
       <div className="flex flex-1">
         <aside
-          className={`fixed inset-y-0 left-0 top-[49px] z-20 w-72 border-r border-border bg-card transition-transform lg:sticky lg:top-[49px] lg:h-[calc(100vh-49px)] lg:translate-x-0 ${
+          className={`fixed inset-y-0 left-0 top-[49px] z-20 w-72 shrink-0 overflow-hidden border-r border-border bg-card transition-transform lg:sticky lg:top-[49px] lg:h-[calc(100vh-49px)] lg:translate-x-0 lg:transition-all ${
             sidebar ? "translate-x-0" : "-translate-x-full"
-          }`}
+          } ${collapsed ? "lg:w-0 lg:border-r-0" : "lg:w-72"}`}
         >
           {treeQuery.isLoading ? (
             <div className="flex h-full items-center justify-center text-muted-foreground">
