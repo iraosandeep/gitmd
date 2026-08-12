@@ -10,12 +10,11 @@ import {
   Menu,
   PanelLeftClose,
   PanelLeftOpen,
-  Minus,
-  Plus,
   X,
 } from "lucide-react";
 import { FileTree } from "@/components/FileTree";
 import { MarkdownView } from "@/components/MarkdownView";
+import { ReaderSettings } from "@/components/ReaderSettings";
 import {
   fetchFile,
   fetchMarkdownTree,
@@ -23,7 +22,7 @@ import {
   prettyName,
   type RepoRef,
 } from "@/lib/github";
-import { SIZES, THEMES, useReaderSize, useTheme } from "@/hooks/use-reader-prefs";
+import { useBoldText, useReaderFont, useReaderSize, useTheme } from "@/hooks/use-reader-prefs";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -53,11 +52,11 @@ const EXAMPLES = [
   { label: "React", value: "facebook/react" },
 ];
 
-const THEME_LABEL: Record<string, string> = { paper: "Paper", sepia: "Sepia", ink: "Ink" };
-
 function Index() {
   const { theme, setTheme } = useTheme();
   const { size, setSize } = useReaderSize();
+  const { font, setFont } = useReaderFont();
+  const { bold, setBold } = useBoldText();
 
   const [input, setInput] = useState("https://github.com/humanlayer/12-factor-agents");
   const [repo, setRepo] = useState<RepoRef | null>(null);
@@ -140,22 +139,17 @@ function Index() {
     setSidebar(false);
   };
 
-  const themeSwitcher = (
-    <div className="flex items-center gap-0.5 rounded-sm border border-border bg-card p-0.5">
-      {THEMES.map((t) => (
-        <button
-          key={t}
-          onClick={() => setTheme(t)}
-          className={`rounded-[3px] px-2 py-1 text-[0.7rem] uppercase tracking-widest transition-colors ${
-            theme === t
-              ? "bg-accent text-accent-foreground"
-              : "text-muted-foreground hover:text-foreground"
-          }`}
-        >
-          {THEME_LABEL[t]}
-        </button>
-      ))}
-    </div>
+  const readerSettings = (
+    <ReaderSettings
+      theme={theme}
+      setTheme={setTheme}
+      font={font}
+      setFont={setFont}
+      bold={bold}
+      setBold={setBold}
+      size={size}
+      setSize={setSize}
+    />
   );
 
   if (!repo) {
@@ -166,7 +160,7 @@ function Index() {
             <span className="flex items-center gap-2 text-sm uppercase tracking-[0.3em] text-muted-foreground">
               <BookOpen className="size-4" /> GitMD
             </span>
-            {themeSwitcher}
+            {readerSettings}
           </div>
           <h1 className="font-[family-name:var(--font-serif-read)] text-4xl leading-tight tracking-tight sm:text-5xl">
             Read any GitHub repo like a book.
@@ -237,7 +231,6 @@ function Index() {
           {collapsed ? <PanelLeftOpen className="size-4" /> : <PanelLeftClose className="size-4" />}
         </button>
 
-
         <button
           onClick={() => {
             setRepo(null);
@@ -255,28 +248,7 @@ function Index() {
         </span>
 
         <div className="ml-auto flex items-center gap-2">
-          <div className="hidden items-center gap-0.5 rounded-sm border border-border bg-card p-0.5 sm:flex">
-            <button
-              onClick={() => setSize(SIZES[Math.max(0, SIZES.indexOf(size as never) - 1)]!)}
-              className="rounded-[3px] px-1.5 py-1 text-muted-foreground transition-colors hover:text-foreground"
-              aria-label="Decrease text size"
-            >
-              <Minus className="size-3.5" />
-            </button>
-            <span className="px-1 text-[0.7rem] uppercase tracking-widest text-muted-foreground">
-              Aa
-            </span>
-            <button
-              onClick={() =>
-                setSize(SIZES[Math.min(SIZES.length - 1, SIZES.indexOf(size as never) + 1)]!)
-              }
-              className="rounded-[3px] px-1.5 py-1 text-muted-foreground transition-colors hover:text-foreground"
-              aria-label="Increase text size"
-            >
-              <Plus className="size-3.5" />
-            </button>
-          </div>
-          {themeSwitcher}
+          {readerSettings}
           <a
             href={`https://github.com/${repo.owner}/${repo.repo}`}
             target="_blank"
