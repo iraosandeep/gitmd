@@ -167,11 +167,21 @@ export function MarkdownView({
               </a>
             );
           },
-          img: ({ src, alt, ...rest }) => {
+          img: ({ src, alt, node: _node, ...rest }: any) => {
             const s = typeof src === "string" ? src : "";
-            const full = /^https?:/i.test(s) ? s : `${rawBase}/${resolveRelative(currentPath, s)}`;
+            let full: string;
+            if (/^https?:/i.test(s)) {
+              // Rewrite github.com blob/raw page URLs to raw.githubusercontent.com
+              const m = s.match(
+                /^https?:\/\/(?:www\.)?github\.com\/([^/]+)\/([^/]+)\/(?:blob|raw)\/(.+)$/i,
+              );
+              full = m ? `https://raw.githubusercontent.com/${m[1]}/${m[2]}/${m[3]}` : s;
+            } else {
+              full = `${rawBase}/${resolveRelative(currentPath, s)}`;
+            }
             return <img src={full} alt={alt ?? ""} loading="lazy" {...rest} />;
           },
+
         }}
       >
         {content}
