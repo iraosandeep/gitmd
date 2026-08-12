@@ -61,6 +61,7 @@ function Index() {
   const [repo, setRepo] = useState<RepoRef | null>(null);
   const [active, setActive] = useState<string | null>(null);
   const [sidebar, setSidebar] = useState(false);
+  const [collapsed, setCollapsed] = useState(false);
 
   useEffect(() => {
     const hash = window.location.hash.slice(1);
