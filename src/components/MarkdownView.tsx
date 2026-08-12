@@ -63,7 +63,7 @@ export function MarkdownView({
     files.find((f) => f.toLowerCase() === candidate.toLowerCase());
 
   const heading = (Tag: "h1" | "h2" | "h3" | "h4" | "h5" | "h6") =>
-    function Heading({ children, ...rest }: { children?: ReactNode }) {
+    function Heading({ children, node: _n, ...rest }: any) {
       const id = slugify(nodeText(children));
       return (
         <Tag id={id} {...rest}>
@@ -84,7 +84,7 @@ export function MarkdownView({
           h4: heading("h4"),
           h5: heading("h5"),
           h6: heading("h6"),
-          a: ({ href, children, ...rest }) => {
+          a: ({ href, children, node: _n, ...rest }: any) => {
             const target = typeof href === "string" ? href : "";
 
             // Same-page anchor
@@ -167,11 +167,21 @@ export function MarkdownView({
               </a>
             );
           },
-          img: ({ src, alt, ...rest }) => {
+          img: ({ src, alt, node: _node, ...rest }: any) => {
             const s = typeof src === "string" ? src : "";
-            const full = /^https?:/i.test(s) ? s : `${rawBase}/${resolveRelative(currentPath, s)}`;
+            let full: string;
+            if (/^https?:/i.test(s)) {
+              // Rewrite github.com blob/raw page URLs to raw.githubusercontent.com
+              const m = s.match(
+                /^https?:\/\/(?:www\.)?github\.com\/([^/]+)\/([^/]+)\/(?:blob|raw)\/(.+)$/i,
+              );
+              full = m ? `https://raw.githubusercontent.com/${m[1]}/${m[2]}/${m[3]}` : s;
+            } else {
+              full = `${rawBase}/${resolveRelative(currentPath, s)}`;
+            }
             return <img src={full} alt={alt ?? ""} loading="lazy" {...rest} />;
           },
+
         }}
       >
         {content}

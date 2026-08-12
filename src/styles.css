@@ -230,11 +230,28 @@
     font-size: inherit;
   }
   & img {
+    display: inline-block;
+    vertical-align: middle;
     max-width: 100%;
     height: auto;
     border-radius: var(--radius-md);
     filter: var(--reader-img-filter, none);
   }
+  & p > img:only-child,
+  & p > a:only-child > img {
+    display: block;
+    margin: 0.4em auto 1.2em;
+  }
+  & div[align="center"],
+  & p[align="center"] {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4em;
+    margin: 0 0 1.2em;
+  }
+
   & table {
     width: 100%;
     border-collapse: collapse;
