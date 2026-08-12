@@ -8,6 +8,8 @@ import {
   Github,
   Loader2,
   Menu,
+  PanelLeftClose,
+  PanelLeftOpen,
   Minus,
   Plus,
   X,
