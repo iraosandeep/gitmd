@@ -52,7 +52,7 @@ export function ReaderSettings({
       </PopoverTrigger>
       <PopoverContent
         align="end"
-        className="w-[19rem] space-y-5"
+        className="w-76 space-y-5 paper-grain"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
         {/* Theme grid */}

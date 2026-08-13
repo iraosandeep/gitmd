@@ -3,7 +3,7 @@ import { useCallback, useEffect, useState } from "react";
 const SIDEBAR_COLLAPSED_KEY = "mdbook.sidebarCollapsed";
 
 export function useSidebarCollapsed() {
-  const [collapsed, setCollapsedState] = useState(false);
+  const [collapsed, setCollapsedState] = useState(true);
 
   useEffect(() => {
     setCollapsedState(window.localStorage.getItem(SIDEBAR_COLLAPSED_KEY) === "1");

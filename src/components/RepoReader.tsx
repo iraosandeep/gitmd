@@ -1,6 +1,11 @@
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { FileTree } from "@/components/FileTree";
+import { GitHubTokenLink } from "@/components/GitHubTokenLink";
+import { MarkdownView } from "@/components/MarkdownView";
+import { useSavedForLater } from "@/hooks/use-saved-for-later";
+import { useSidebarCollapsed } from "@/hooks/use-sidebar-collapsed";
+import { fetchFile, fetchMarkdownTree, prettyName } from "@/lib/github";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import {
   Bookmark,
   BookmarkCheck,
@@ -13,18 +18,8 @@ import {
   PanelLeftOpen,
   X,
 } from "lucide-react";
-import { FileTree } from "@/components/FileTree";
-import { GitHubTokenLink } from "@/components/GitHubTokenLink";
-import { MarkdownView } from "@/components/MarkdownView";
-import { ReaderSettings } from "@/components/ReaderSettings";
-import { fetchFile, fetchMarkdownTree, prettyName } from "@/lib/github";
-import { useBoldText } from "@/hooks/use-bold-text";
-import { useGrainBackground } from "@/hooks/use-grain-background";
-import { useReaderFont } from "@/hooks/use-reader-font";
-import { useReaderSize } from "@/hooks/use-reader-size";
-import { useSavedForLater } from "@/hooks/use-saved-for-later";
-import { useSidebarCollapsed } from "@/hooks/use-sidebar-collapsed";
-import { useTheme } from "@/hooks/use-theme";
+import { useEffect, useMemo, useState } from "react";
+import { SettingControl } from "./SettingControl";
 
 function AppLogo({ className = "size-4" }: { className?: string }) {
   return <img src="/favicon.svg" alt="" className={`${className} rounded-[3px]`} />;
@@ -40,12 +35,7 @@ export function RepoReader({
   activePath: string;
 }) {
   const navigate = useNavigate();
-  const { theme, setTheme } = useTheme();
-  const { size, setSize } = useReaderSize();
-  const { font, setFont } = useReaderFont();
-  const { bold, setBold } = useBoldText();
   const { collapsed, setCollapsed } = useSidebarCollapsed();
-  const { enabled: grain, setEnabled: setGrain } = useGrainBackground();
   const { isSaved, save, toggle: toggleSaved } = useSavedForLater();
 
   const [sidebar, setSidebar] = useState(false);
@@ -91,21 +81,6 @@ export function RepoReader({
     setSidebar(false);
     navigate({ to: "/$owner/$repo/$", params: { owner, repo, _splat: path } });
   };
-
-  const readerSettings = (
-    <ReaderSettings
-      theme={theme}
-      setTheme={setTheme}
-      font={font}
-      setFont={setFont}
-      bold={bold}
-      setBold={setBold}
-      size={size}
-      setSize={setSize}
-      grain={grain}
-      setGrain={setGrain}
-    />
-  );
 
   return (
     <div className="flex min-h-screen flex-col">
@@ -154,7 +129,7 @@ export function RepoReader({
             )}
           </button>
           <GitHubTokenLink />
-          {readerSettings}
+          <SettingControl />
           <a
             href={`https://github.com/${owner}/${repo}`}
             target="_blank"

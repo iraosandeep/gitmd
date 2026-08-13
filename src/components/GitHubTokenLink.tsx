@@ -1,5 +1,5 @@
 import { Link } from "@tanstack/react-router";
-import { KeyRound } from "lucide-react";
+import { Gauge } from "lucide-react";
 import { useGitHubToken } from "@/hooks/use-github-token";
 
 export function GitHubTokenLink() {
@@ -12,7 +12,7 @@ export function GitHubTokenLink() {
       aria-label={token ? "GitHub token saved — manage" : "Set up a GitHub token"}
       title={token ? "GitHub token saved — manage" : "Set up a GitHub token"}
     >
-      <KeyRound className="size-4" />
+      <Gauge className="size-4" />
       {token && (
         <span
           className="absolute right-1 top-1 size-1.5 rounded-full bg-primary"
