@@ -86,7 +86,7 @@ export function RepoReader({
       <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-border bg-background/95 px-3 py-2 backdrop-blur sm:px-4 paper-grain">
         <button
           onClick={() => setSidebar((v) => !v)}
-          className="rounded-sm p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground lg:hidden"
+          className="lg:hidden items-center gap-1.5 rounded-sm border border-border bg-card px-2.5 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
           aria-label="Toggle contents"
         >
           {sidebar ? <X className="size-4" /> : <Menu className="size-4" />}
@@ -94,7 +94,7 @@ export function RepoReader({
 
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="hidden rounded-sm p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground lg:block"
+          className="hidden lg:flex items-center gap-1.5 rounded-sm border border-border bg-card px-2.5 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
           aria-label={collapsed ? "Show contents" : "Hide contents"}
           title={collapsed ? "Show contents" : "Hide contents"}
         >
@@ -116,7 +116,7 @@ export function RepoReader({
         <div className="ml-auto flex items-center gap-2">
           <button
             onClick={() => toggleSaved(owner, repo, activePath)}
-            className="rounded-sm p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            className="flex items-center gap-1.5 rounded-sm border border-border bg-card px-2.5 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
             aria-label={isSaved(owner, repo) ? "Remove from saved" : "Save for later"}
             aria-pressed={isSaved(owner, repo)}
             title={isSaved(owner, repo) ? "Remove from saved" : "Save for later"}
@@ -132,7 +132,7 @@ export function RepoReader({
             href={`https://github.com/${owner}/${repo}`}
             target="_blank"
             rel="noreferrer noopener"
-            className="hidden rounded-sm p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground sm:block"
+            className="flex items-center gap-1.5 rounded-sm border border-border bg-card px-2.5 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
             aria-label="View on GitHub"
           >
             <Github className="size-4" />

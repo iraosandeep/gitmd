@@ -52,7 +52,7 @@ export function ReaderSettings({
         title="Settings"
       >
         <Settings className="size-3.5" />
-        <span className="text-[0.7rem] uppercase tracking-widest">Settings</span>
+        {/*<span className="text-[0.7rem] uppercase tracking-widest">Settings</span>*/}
       </PopoverTrigger>
       <PopoverContent
         align="end"
