@@ -5,6 +5,23 @@ import { Loader2 } from "lucide-react";
 import { fetchMarkdownTree } from "@/lib/github";
 
 export const Route = createFileRoute("/$owner/$repo/")({
+  head: ({ params }) => ({
+    meta: [
+      { title: `${params.owner}/${params.repo} — GitMD` },
+      {
+        name: "description",
+        content: `Browse and read every Markdown file in ${params.owner}/${params.repo} as a calm, e-ink styled book.`,
+      },
+      { property: "og:title", content: `${params.owner}/${params.repo} — GitMD` },
+      {
+        property: "og:description",
+        content: `Browse and read every Markdown file in ${params.owner}/${params.repo} as a calm, e-ink styled book.`,
+      },
+      { property: "og:type", content: "article" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: `https://gitmd.lovable.app/${params.owner}/${params.repo}` }],
+  }),
   component: RouteComponent,
 });
 

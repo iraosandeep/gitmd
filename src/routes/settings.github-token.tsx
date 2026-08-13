@@ -11,7 +11,23 @@ function AppLogo({ className = "size-4" }: { className?: string }) {
 
 export const Route = createFileRoute("/settings/github-token")({
   head: () => ({
-    meta: [{ title: "GitHub token — GitMD" }],
+    meta: [
+      { title: "GitHub token — GitMD" },
+      {
+        name: "description",
+        content:
+          "Optionally add a GitHub personal access token to raise the rate limit when reading very large public repositories in GitMD.",
+      },
+      { property: "og:title", content: "GitHub token — GitMD" },
+      {
+        property: "og:description",
+        content:
+          "Optionally add a GitHub personal access token to raise the rate limit when reading very large public repositories in GitMD.",
+      },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
+    ],
+    links: [{ rel: "canonical", href: "https://gitmd.lovable.app/settings/github-token" }],
   }),
   component: GitHubTokenSettings,
 });
