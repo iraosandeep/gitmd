@@ -1,5 +1,6 @@
 import { Check, ChevronRight, RotateCcw, Settings } from "lucide-react";
 import { Link } from "@tanstack/react-router";
+import { Button } from "@/components/Button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
@@ -46,13 +47,10 @@ export function ReaderSettings({
 
   return (
     <Popover>
-      <PopoverTrigger
-        className="flex items-center gap-1.5 rounded-sm border border-border bg-card px-2.5 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
-        aria-label="Settings"
-        title="Settings"
-      >
-        <Settings className="size-3.5" />
-        {/*<span className="text-[0.7rem] uppercase tracking-widest">Settings</span>*/}
+      <PopoverTrigger asChild>
+        <Button variant="icon" aria-label="Settings" title="Settings">
+          <Settings className="size-3.5" />
+        </Button>
       </PopoverTrigger>
       <PopoverContent
         align="end"
@@ -177,13 +175,10 @@ export function ReaderSettings({
           <Switch id="paper-texture" checked={grain} onCheckedChange={setGrain} />
         </section>
 
-        <button
-          onClick={reset}
-          className="flex w-full items-center justify-center gap-1.5 rounded-sm border border-border bg-card py-2 text-xs text-muted-foreground transition-colors hover:text-foreground"
-        >
+        <Button variant="outline" onClick={reset} className="w-full py-2">
           <RotateCcw className="size-3.5" />
           Reset to defaults
-        </button>
+        </Button>
       </PopoverContent>
     </Popover>
   );

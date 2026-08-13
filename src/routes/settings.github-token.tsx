@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowLeft, Check, Loader2, X } from "lucide-react";
+import { Button } from "@/components/Button";
 import { useGitHubToken } from "@/hooks/use-github-token";
 import { useGitHubTokenValidation } from "@/hooks/use-github-token-validation";
 
@@ -121,20 +122,22 @@ function GitHubTokenSettings() {
                 validation.status === "invalid" ? "border-destructive" : "border-border"
               }`}
             />
-            <button
+            <Button
+              variant="primary"
               onClick={handleSave}
               disabled={validation.status === "checking" || (!draft && !token)}
-              className="rounded-sm bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
+              className="px-3 py-2"
             >
               {validation.status === "checking" ? "Checking…" : "Save"}
-            </button>
+            </Button>
             {token && (
-              <button
+              <Button
+                variant="outline"
                 onClick={handleClear}
-                className="rounded-sm border border-border px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+                className="bg-transparent py-2 text-sm hover:bg-secondary"
               >
                 Clear
-              </button>
+              </Button>
             )}
           </div>
           <p className="mt-2 text-[0.7rem] leading-relaxed text-muted-foreground">

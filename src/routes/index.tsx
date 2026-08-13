@@ -1,3 +1,4 @@
+import { Button } from "@/components/Button";
 import { SavedForLaterDrawer } from "@/components/SavedForLaterDrawer";
 import { SettingControl } from "@/components/SettingControl";
 import { parseRepoInput } from "@/lib/github";
@@ -79,27 +80,24 @@ function Index() {
             placeholder="github.com/owner/repo"
             className="flex-1 rounded-sm border border-border bg-card px-3 py-2.5 text-sm outline-none placeholder:text-muted-foreground focus:border-ring"
           />
-          <button
-            type="submit"
-            className="rounded-sm bg-primary px-5 py-2.5 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
-          >
+          <Button type="submit" variant="primary">
             Open book
-          </button>
+          </Button>
         </form>
 
         <div className="mt-6 flex flex-wrap items-center gap-2">
           <span className="text-xs uppercase tracking-widest text-muted-foreground">Try</span>
           {EXAMPLES.map((e) => (
-            <button
+            <Button
               key={e.value}
+              variant="outline"
               onClick={() => {
                 setInput(`https://github.com/${e.value}`);
                 load(e.value);
               }}
-              className="rounded-sm border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground"
             >
               {e.label}
-            </button>
+            </Button>
           ))}
         </div>
 

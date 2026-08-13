@@ -1,5 +1,6 @@
 import { useNavigate } from "@tanstack/react-router";
 import { BookmarkCheck, X } from "lucide-react";
+import { Button } from "@/components/Button";
 import {
   Drawer,
   DrawerClose,
@@ -23,9 +24,11 @@ export function SavedForLaterDrawer() {
 
   return (
     <Drawer>
-      <DrawerTrigger className="flex items-center gap-2 rounded-sm border border-border bg-card px-3 py-1.5 text-xs text-muted-foreground transition-colors hover:text-foreground">
-        <BookmarkCheck className="size-3.5" />
-        Saved for later ({saved.length})
+      <DrawerTrigger asChild>
+        <Button variant="outline">
+          <BookmarkCheck className="size-3.5" />
+          Saved for later ({saved.length})
+        </Button>
       </DrawerTrigger>
       <DrawerContent className="mx-auto max-w-2xl">
         <div className="paper-grain">

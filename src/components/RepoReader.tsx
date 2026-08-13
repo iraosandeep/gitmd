@@ -1,3 +1,4 @@
+import { Button } from "@/components/Button";
 import { FileTree } from "@/components/FileTree";
 import { MarkdownView } from "@/components/MarkdownView";
 import { useSavedForLater } from "@/hooks/use-saved-for-later";
@@ -84,22 +85,24 @@ export function RepoReader({
   return (
     <div className="flex min-h-screen flex-col">
       <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-border bg-background/95 px-3 py-2 backdrop-blur sm:px-4 paper-grain">
-        <button
+        <Button
+          variant="icon"
           onClick={() => setSidebar((v) => !v)}
-          className="lg:hidden items-center gap-1.5 rounded-sm border border-border bg-card px-2.5 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
+          className="lg:hidden"
           aria-label="Toggle contents"
         >
           {sidebar ? <X className="size-4" /> : <Menu className="size-4" />}
-        </button>
+        </Button>
 
-        <button
+        <Button
+          variant="icon"
           onClick={() => setCollapsed(!collapsed)}
-          className="hidden lg:flex items-center gap-1.5 rounded-sm border border-border bg-card px-2.5 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
+          className="hidden lg:flex"
           aria-label={collapsed ? "Show contents" : "Hide contents"}
           title={collapsed ? "Show contents" : "Hide contents"}
         >
           {collapsed ? <PanelLeftOpen className="size-4" /> : <PanelLeftClose className="size-4" />}
-        </button>
+        </Button>
 
         <button
           onClick={() => navigate({ to: "/" })}
@@ -114,9 +117,9 @@ export function RepoReader({
         </span>
 
         <div className="ml-auto flex items-center gap-2">
-          <button
+          <Button
+            variant="icon"
             onClick={() => toggleSaved(owner, repo, activePath)}
-            className="flex items-center gap-1.5 rounded-sm border border-border bg-card px-2.5 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
             aria-label={isSaved(owner, repo) ? "Remove from saved" : "Save for later"}
             aria-pressed={isSaved(owner, repo)}
             title={isSaved(owner, repo) ? "Remove from saved" : "Save for later"}
@@ -126,17 +129,18 @@ export function RepoReader({
             ) : (
               <Bookmark className="size-4" />
             )}
-          </button>
+          </Button>
           <SettingControl />
-          <a
-            href={`https://github.com/${owner}/${repo}`}
-            target="_blank"
-            rel="noreferrer noopener"
-            className="flex items-center gap-1.5 rounded-sm border border-border bg-card px-2.5 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
-            aria-label="View on GitHub"
-          >
-            <Github className="size-4" />
-          </a>
+          <Button variant="icon" asChild>
+            <a
+              href={`https://github.com/${owner}/${repo}`}
+              target="_blank"
+              rel="noreferrer noopener"
+              aria-label="View on GitHub"
+            >
+              <Github className="size-4" />
+            </a>
+          </Button>
         </div>
       </header>
 
