@@ -168,7 +168,7 @@ export function MarkdownView({
                   if (match) {
                     return (
                       <a
-                        href={`#${match}`}
+                        href={`/${owner}/${repo}/${match}`}
                         onClick={(e) => {
                           e.preventDefault();
                           if (match !== currentPath) onNavigate(match);
@@ -195,7 +195,7 @@ export function MarkdownView({
               if (match) {
                 return (
                   <a
-                    href={`#${match}`}
+                    href={owner && repo ? `/${owner}/${repo}/${match}` : `#${match}`}
                     onClick={(e) => {
                       e.preventDefault();
                       if (match !== currentPath) onNavigate(match);

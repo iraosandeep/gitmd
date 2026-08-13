@@ -111,13 +111,47 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   errorComponent: ErrorComponent,
 });
 
+const APPLY_READER_PREFS_SCRIPT = `(function(){
+  try {
+    var themes = ["original","paper","sepia","calm","focus","quiet","ink"];
+    var t = localStorage.getItem("mdbook.theme");
+    if (!t || themes.indexOf(t) === -1) t = "paper";
+    document.documentElement.setAttribute("data-theme", t);
+
+    var fonts = {
+      literata: '"Literata", Georgia, "Times New Roman", serif',
+      newsreader: '"Newsreader", Georgia, serif',
+      lora: '"Lora", Georgia, serif',
+      inter: '"Inter", ui-sans-serif, system-ui, sans-serif',
+      atkinson: '"Atkinson Hyperlegible", ui-sans-serif, system-ui, sans-serif',
+      mono: '"IBM Plex Mono", ui-monospace, SFMono-Regular, monospace'
+    };
+    var f = localStorage.getItem("mdbook.font");
+    document.documentElement.style.setProperty("--reader-font", fonts[f] || fonts.literata);
+
+    var s = parseFloat(localStorage.getItem("mdbook.size"));
+    document.documentElement.style.setProperty("--reader-size", (s || 1.125) + "rem");
+
+    document.documentElement.style.setProperty(
+      "--reader-weight",
+      localStorage.getItem("mdbook.bold") === "1" ? "500" : "400"
+    );
+
+    document.documentElement.setAttribute(
+      "data-grain",
+      localStorage.getItem("mdbook.grain") === "0" ? "off" : "on"
+    );
+  } catch (e) {}
+})();`;
+
 function RootShell({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
       <head>
+        <script dangerouslySetInnerHTML={{ __html: APPLY_READER_PREFS_SCRIPT }} />
         <HeadContent />
       </head>
-      <body>
+      <body className="paper-grain">
         {children}
         <Scripts />
       </body>

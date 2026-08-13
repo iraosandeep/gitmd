@@ -35,7 +35,8 @@ const API = "https://api.github.com";
 async function gh<T>(url: string): Promise<T> {
   const res = await fetch(url, { headers: { Accept: "application/vnd.github+json" } });
   if (!res.ok) {
-    if (res.status === 403) throw new Error("GitHub rate limit reached. Try again in a few minutes.");
+    if (res.status === 403)
+      throw new Error("GitHub rate limit reached. Try again in a few minutes.");
     if (res.status === 404) throw new Error("Repository not found or is private.");
     throw new Error(`GitHub request failed (${res.status}).`);
   }
@@ -48,7 +49,9 @@ export async function fetchDefaultBranch(ref: RepoRef): Promise<string> {
   return data.default_branch;
 }
 
-export async function fetchMarkdownTree(ref: RepoRef): Promise<{ branch: string; files: string[] }> {
+export async function fetchMarkdownTree(
+  ref: RepoRef,
+): Promise<{ branch: string; files: string[] }> {
   const branch = await fetchDefaultBranch(ref);
   const data = await gh<{ tree: TreeEntry[]; truncated: boolean }>(
     `${API}/repos/${ref.owner}/${ref.repo}/git/trees/${encodeURIComponent(branch)}?recursive=1`,

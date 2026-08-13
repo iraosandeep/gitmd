@@ -24,6 +24,8 @@ type Props = {
   setBold: (b: boolean) => void;
   size: number;
   setSize: (s: number) => void;
+  grain: boolean;
+  setGrain: (g: boolean) => void;
 };
 
 export function ReaderSettings({
@@ -35,12 +37,15 @@ export function ReaderSettings({
   setBold,
   size,
   setSize,
+  grain,
+  setGrain,
 }: Props) {
   const reset = () => {
     setTheme(DEFAULT_THEME);
     setFont(DEFAULT_FONT);
     setBold(DEFAULT_BOLD);
     setSize(DEFAULT_SIZE);
+    setGrain(true);
   };
 
   return (
@@ -150,6 +155,14 @@ export function ReaderSettings({
             Bold text
           </label>
           <Switch id="bold-text" checked={bold} onCheckedChange={setBold} />
+        </section>
+
+        {/* Paper texture */}
+        <section className="flex items-center justify-between">
+          <label htmlFor="paper-texture" className="text-sm text-foreground">
+            Paper texture
+          </label>
+          <Switch id="paper-texture" checked={grain} onCheckedChange={setGrain} />
         </section>
 
         <button

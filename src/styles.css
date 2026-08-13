@@ -390,13 +390,17 @@
 
   &::after {
     content: "";
-    position: absolute;
+    position: fixed;
     inset: 0;
     pointer-events: none;
     opacity: 0.35;
     background-image: radial-gradient(circle at 1px 1px, var(--color-border) 0.5px, transparent 0);
     background-size: 4px 4px;
   }
+}
+
+[data-grain="off"] .paper-grain::after {
+  content: none;
 }
 
 [data-theme="quiet"] .reader-images,
