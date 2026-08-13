@@ -12,4 +12,8 @@ export default defineConfig({
     // nitro/vite builds from this
     server: { entry: "server" },
   },
+  // Add your standard Vite overrides here safely ⬇️
+  vite: {
+    base: "/gitmd/", 
+  },
 });
