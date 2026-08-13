@@ -1,4 +1,3 @@
-import { GitHubTokenLink } from "@/components/GitHubTokenLink";
 import { SavedForLaterDrawer } from "@/components/SavedForLaterDrawer";
 import { SettingControl } from "@/components/SettingControl";
 import { parseRepoInput } from "@/lib/github";
@@ -56,7 +55,6 @@ function Index() {
             <AppLogo className="size-8" /> GitMD
           </span>
           <div className="flex items-center gap-2">
-            <GitHubTokenLink />
             <SettingControl />
           </div>
         </div>

@@ -1,5 +1,4 @@
 import { FileTree } from "@/components/FileTree";
-import { GitHubTokenLink } from "@/components/GitHubTokenLink";
 import { MarkdownView } from "@/components/MarkdownView";
 import { useSavedForLater } from "@/hooks/use-saved-for-later";
 import { useSidebarCollapsed } from "@/hooks/use-sidebar-collapsed";
@@ -128,7 +127,6 @@ export function RepoReader({
               <Bookmark className="size-4" />
             )}
           </button>
-          <GitHubTokenLink />
           <SettingControl />
           <a
             href={`https://github.com/${owner}/${repo}`}

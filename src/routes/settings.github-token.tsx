@@ -1,6 +1,8 @@
+import { useEffect, useState } from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { ArrowLeft, Check } from "lucide-react";
+import { ArrowLeft, Check, Loader2, X } from "lucide-react";
 import { useGitHubToken } from "@/hooks/use-github-token";
+import { useGitHubTokenValidation } from "@/hooks/use-github-token-validation";
 
 function AppLogo({ className = "size-4" }: { className?: string }) {
   return <img src="/favicon.svg" alt="" className={`${className} rounded-[3px]`} />;
@@ -15,6 +17,28 @@ export const Route = createFileRoute("/settings/github-token")({
 
 function GitHubTokenSettings() {
   const { token, setToken } = useGitHubToken();
+  const { validation, validate, reset } = useGitHubTokenValidation();
+  const [draft, setDraft] = useState(token);
+
+  useEffect(() => {
+    setDraft(token);
+  }, [token]);
+
+  const handleSave = async () => {
+    if (!draft) {
+      setToken("");
+      reset();
+      return;
+    }
+    const ok = await validate(draft);
+    if (ok) setToken(draft);
+  };
+
+  const handleClear = () => {
+    setDraft("");
+    setToken("");
+    reset();
+  };
 
   return (
     <main className="flex min-h-screen flex-col items-center px-6 py-16">
@@ -59,7 +83,23 @@ function GitHubTokenSettings() {
             >
               Your token
             </label>
-            {token && (
+            {validation.status === "checking" && (
+              <span className="flex items-center gap-1 text-[0.65rem] text-muted-foreground">
+                <Loader2 className="size-3 animate-spin" /> Checking token…
+              </span>
+            )}
+            {validation.status === "valid" && (
+              <span className="flex items-center gap-1 text-[0.65rem] text-muted-foreground">
+                <Check className="size-3" />
+                {`Valid — ${validation.limit.toLocaleString()} requests/hour`}
+              </span>
+            )}
+            {validation.status === "invalid" && (
+              <span className="flex items-center gap-1 text-[0.65rem] text-destructive">
+                <X className="size-3" /> Invalid or expired token
+              </span>
+            )}
+            {validation.status === "idle" && token && draft === token && (
               <span className="flex items-center gap-1 text-[0.65rem] text-muted-foreground">
                 <Check className="size-3" /> Saved in this browser
               </span>
@@ -69,16 +109,28 @@ function GitHubTokenSettings() {
             <input
               id="github-token"
               type="password"
-              value={token}
-              onChange={(e) => setToken(e.target.value)}
+              value={draft}
+              onChange={(e) => {
+                setDraft(e.target.value);
+                reset();
+              }}
               placeholder="ghp_... or github_pat_..."
               autoComplete="off"
               spellCheck={false}
-              className="flex-1 rounded-sm border border-border bg-background px-2.5 py-2 text-sm outline-none placeholder:text-muted-foreground focus:border-ring"
+              className={`flex-1 rounded-sm border bg-background px-2.5 py-2 text-sm outline-none placeholder:text-muted-foreground focus:border-ring ${
+                validation.status === "invalid" ? "border-destructive" : "border-border"
+              }`}
             />
+            <button
+              onClick={handleSave}
+              disabled={validation.status === "checking" || (!draft && !token)}
+              className="rounded-sm bg-primary px-3 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:pointer-events-none disabled:opacity-50"
+            >
+              {validation.status === "checking" ? "Checking…" : "Save"}
+            </button>
             {token && (
               <button
-                onClick={() => setToken("")}
+                onClick={handleClear}
                 className="rounded-sm border border-border px-3 py-2 text-sm text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
               >
                 Clear
@@ -120,7 +172,7 @@ function GitHubTokenSettings() {
               Leave <strong>Permissions</strong> as-is — nothing needs to be checked for public read
               access.
             </li>
-            <li>Click Generate token, then paste it into the field above.</li>
+            <li>Click Generate token, paste it into the field above, then hit Save.</li>
           </ol>
         </section>
 
@@ -149,7 +201,7 @@ function GitHubTokenSettings() {
               Leave <strong>every scope checkbox unchecked</strong>. A token with zero scopes still
               gets the higher rate limit for reading public data — no access is needed beyond that.
             </li>
-            <li>Click Generate token, then paste it into the field above.</li>
+            <li>Click Generate token, paste it into the field above, then hit Save.</li>
           </ol>
           <p className="mt-4 rounded-sm border border-border bg-card p-3 text-sm text-destructive">
             Don't check <strong>repo</strong>. That scope grants full read/write access to all of
