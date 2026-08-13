@@ -2,15 +2,14 @@ import { useState } from "react";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { BookmarkCheck, X } from "lucide-react";
 import { parseRepoInput, prettyName } from "@/lib/github";
+import { GitHubTokenLink } from "@/components/GitHubTokenLink";
 import { ReaderSettings } from "@/components/ReaderSettings";
-import {
-  useBoldText,
-  useGrainBackground,
-  useReaderFont,
-  useReaderSize,
-  useSavedForLater,
-  useTheme,
-} from "@/hooks/use-reader-prefs";
+import { useBoldText } from "@/hooks/use-bold-text";
+import { useGrainBackground } from "@/hooks/use-grain-background";
+import { useReaderFont } from "@/hooks/use-reader-font";
+import { useReaderSize } from "@/hooks/use-reader-size";
+import { useSavedForLater } from "@/hooks/use-saved-for-later";
+import { useTheme } from "@/hooks/use-theme";
 
 function AppLogo({ className = "size-4" }: { className?: string }) {
   return <img src="/favicon.svg" alt="" className={`${className} rounded-[3px]`} />;
@@ -85,9 +84,12 @@ function Index() {
       <div className="w-full max-w-xl">
         <div className="mb-10 flex items-center justify-between">
           <span className="flex items-center gap-2 text-sm uppercase tracking-[0.3em] text-muted-foreground">
-            <AppLogo className="size-12" /> GitMD
+            <AppLogo className="size-8" /> GitMD
           </span>
-          {readerSettings}
+          <div className="flex items-center gap-2">
+            <GitHubTokenLink />
+            {readerSettings}
+          </div>
         </div>
         <h1 className="font-[family-name:var(--font-serif-read)] text-4xl leading-tight tracking-tight sm:text-5xl">
           Read any GitHub repo like a book.
@@ -139,7 +141,7 @@ function Index() {
             <span className="text-xs uppercase tracking-widest text-muted-foreground">
               Saved for later
             </span>
-            <ul className="mt-3 flex flex-col gap-1.5">
+            <ul className="mt-3 flex max-h-60 flex-col gap-1.5 overflow-y-auto pr-1">
               {saved.map((s) => (
                 <li key={`${s.owner}/${s.repo}`} className="flex items-center gap-2">
                   <button

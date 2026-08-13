@@ -14,18 +14,17 @@ import {
   X,
 } from "lucide-react";
 import { FileTree } from "@/components/FileTree";
+import { GitHubTokenLink } from "@/components/GitHubTokenLink";
 import { MarkdownView } from "@/components/MarkdownView";
 import { ReaderSettings } from "@/components/ReaderSettings";
 import { fetchFile, fetchMarkdownTree, prettyName } from "@/lib/github";
-import {
-  useBoldText,
-  useGrainBackground,
-  useReaderFont,
-  useReaderSize,
-  useSavedForLater,
-  useSidebarCollapsed,
-  useTheme,
-} from "@/hooks/use-reader-prefs";
+import { useBoldText } from "@/hooks/use-bold-text";
+import { useGrainBackground } from "@/hooks/use-grain-background";
+import { useReaderFont } from "@/hooks/use-reader-font";
+import { useReaderSize } from "@/hooks/use-reader-size";
+import { useSavedForLater } from "@/hooks/use-saved-for-later";
+import { useSidebarCollapsed } from "@/hooks/use-sidebar-collapsed";
+import { useTheme } from "@/hooks/use-theme";
 
 function AppLogo({ className = "size-4" }: { className?: string }) {
   return <img src="/favicon.svg" alt="" className={`${className} rounded-[3px]`} />;
@@ -154,6 +153,7 @@ export function RepoReader({
               <Bookmark className="size-4" />
             )}
           </button>
+          <GitHubTokenLink />
           {readerSettings}
           <a
             href={`https://github.com/${owner}/${repo}`}

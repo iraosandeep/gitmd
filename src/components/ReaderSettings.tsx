@@ -2,18 +2,10 @@ import { Check, RotateCcw, Type } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import {
-  DEFAULT_BOLD,
-  DEFAULT_FONT,
-  DEFAULT_SIZE,
-  DEFAULT_THEME,
-  FONT_LIST,
-  SIZE_MAX,
-  SIZE_MIN,
-  SIZE_STEP,
-  THEME_LIST,
-  type Theme,
-} from "@/hooks/use-reader-prefs";
+import { DEFAULT_BOLD } from "@/hooks/use-bold-text";
+import { DEFAULT_FONT, FONT_LIST } from "@/hooks/use-reader-font";
+import { DEFAULT_SIZE, SIZE_MAX, SIZE_MIN, SIZE_STEP } from "@/hooks/use-reader-size";
+import { DEFAULT_THEME, THEME_LIST, type Theme } from "@/hooks/use-theme";
 
 type Props = {
   theme: Theme;

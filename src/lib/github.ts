@@ -1,6 +1,8 @@
-export type RepoRef = { owner: string; repo: string; branch?: string };
+import { fetchTreeFromJsDelivr } from "./sources/jsdelivr";
+import { fetchTreeFromGitHubPublic } from "./sources/github-public";
+import { fetchTreeFromGitHubToken, getGitHubToken } from "./sources/github-token";
 
-export type TreeEntry = { path: string; type: "blob" | "tree"; sha: string };
+export type RepoRef = { owner: string; repo: string; branch?: string };
 
 export function parseRepoInput(input: string): RepoRef | null {
   const raw = input.trim().replace(/\.git$/, "");
@@ -30,37 +32,30 @@ export function parseRepoInput(input: string): RepoRef | null {
   return { owner, repo, ...(branch ? { branch } : {}) };
 }
 
-const API = "https://api.github.com";
-
-async function gh<T>(url: string): Promise<T> {
-  const res = await fetch(url, { headers: { Accept: "application/vnd.github+json" } });
-  if (!res.ok) {
-    if (res.status === 403)
-      throw new Error("GitHub rate limit reached. Try again in a few minutes.");
-    if (res.status === 404) throw new Error("Repository not found or is private.");
-    throw new Error(`GitHub request failed (${res.status}).`);
-  }
-  return (await res.json()) as T;
-}
-
-export async function fetchDefaultBranch(ref: RepoRef): Promise<string> {
-  if (ref.branch) return ref.branch;
-  const data = await gh<{ default_branch: string }>(`${API}/repos/${ref.owner}/${ref.repo}`);
-  return data.default_branch;
-}
-
+// Three independent data sources are tried in order, each in its own module under
+// ./sources: jsDelivr (fast, keyless, but 50MB repo cap), an authenticated GitHub API
+// call using a user-supplied token (if one is set, 5,000 req/hour), and finally the
+// anonymous GitHub API (60 req/hour). Any source that fails — for any reason — falls
+// through to the next one instead of surfacing an error immediately.
 export async function fetchMarkdownTree(
   ref: RepoRef,
 ): Promise<{ branch: string; files: string[] }> {
-  const branch = await fetchDefaultBranch(ref);
-  const data = await gh<{ tree: TreeEntry[]; truncated: boolean }>(
-    `${API}/repos/${ref.owner}/${ref.repo}/git/trees/${encodeURIComponent(branch)}?recursive=1`,
-  );
-  const files = data.tree
-    .filter((e) => e.type === "blob" && /\.(md|mdx|markdown)$/i.test(e.path))
-    .map((e) => e.path)
-    .sort((a, b) => a.localeCompare(b));
-  return { branch, files };
+  const token = getGitHubToken();
+  const attempts = [
+    () => fetchTreeFromJsDelivr(ref),
+    ...(token ? [() => fetchTreeFromGitHubToken(ref, token)] : []),
+    () => fetchTreeFromGitHubPublic(ref),
+  ];
+
+  let lastError: unknown;
+  for (const attempt of attempts) {
+    try {
+      return await attempt();
+    } catch (err) {
+      lastError = err;
+    }
+  }
+  throw lastError;
 }
 
 export async function fetchFile(ref: RepoRef, branch: string, path: string): Promise<string> {
