@@ -91,7 +91,7 @@ export function FileTree({
   const tree = useMemo(() => buildTree(filtered), [filtered]);
 
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col paper-grain">
       <div className="relative border-b border-border px-3 py-2.5">
         <Search className="pointer-events-none absolute left-5 top-1/2 size-3.5 -translate-y-1/2 text-muted-foreground" />
         <input

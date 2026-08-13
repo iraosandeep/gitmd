@@ -1,16 +1,8 @@
-import { useState } from "react";
+import { SavedForLaterDrawer } from "@/components/SavedForLaterDrawer";
+import { SettingControl } from "@/components/SettingControl";
+import { parseRepoInput } from "@/lib/github";
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { BookmarkCheck, X } from "lucide-react";
-import { parseRepoInput, prettyName } from "@/lib/github";
-import { ReaderSettings } from "@/components/ReaderSettings";
-import {
-  useBoldText,
-  useGrainBackground,
-  useReaderFont,
-  useReaderSize,
-  useSavedForLater,
-  useTheme,
-} from "@/hooks/use-reader-prefs";
+import { useState } from "react";
 
 function AppLogo({ className = "size-4" }: { className?: string }) {
   return <img src="/favicon.svg" alt="" className={`${className} rounded-[3px]`} />;
@@ -45,12 +37,6 @@ const EXAMPLES = [
 ];
 
 function Index() {
-  const { theme, setTheme } = useTheme();
-  const { size, setSize } = useReaderSize();
-  const { font, setFont } = useReaderFont();
-  const { bold, setBold } = useBoldText();
-  const { enabled: grain, setEnabled: setGrain } = useGrainBackground();
-  const { items: saved, remove: removeSaved } = useSavedForLater();
   const navigate = useNavigate();
 
   const [input, setInput] = useState("https://github.com/humanlayer/12-factor-agents");
@@ -61,33 +47,16 @@ function Index() {
     navigate({ to: "/$owner/$repo", params: { owner: parsed.owner, repo: parsed.repo } });
   };
 
-  const openSaved = (owner: string, repo: string, path: string) => {
-    navigate({ to: "/$owner/$repo/$", params: { owner, repo, _splat: path } });
-  };
-
-  const readerSettings = (
-    <ReaderSettings
-      theme={theme}
-      setTheme={setTheme}
-      font={font}
-      setFont={setFont}
-      bold={bold}
-      setBold={setBold}
-      size={size}
-      setSize={setSize}
-      grain={grain}
-      setGrain={setGrain}
-    />
-  );
-
   return (
     <main className="flex min-h-screen flex-col items-center justify-center px-6 py-16">
       <div className="w-full max-w-xl">
         <div className="mb-10 flex items-center justify-between">
           <span className="flex items-center gap-2 text-sm uppercase tracking-[0.3em] text-muted-foreground">
-            <AppLogo className="size-12" /> GitMD
+            <AppLogo className="size-8" /> GitMD
           </span>
-          {readerSettings}
+          <div className="flex items-center gap-2">
+            <SettingControl />
+          </div>
         </div>
         <h1 className="font-[family-name:var(--font-serif-read)] text-4xl leading-tight tracking-tight sm:text-5xl">
           Read any GitHub repo like a book.
@@ -134,41 +103,9 @@ function Index() {
           ))}
         </div>
 
-        {saved.length > 0 && (
-          <div className="mt-10 border-t border-border pt-6">
-            <span className="text-xs uppercase tracking-widest text-muted-foreground">
-              Saved for later
-            </span>
-            <ul className="mt-3 flex flex-col gap-1.5">
-              {saved.map((s) => (
-                <li key={`${s.owner}/${s.repo}`} className="flex items-center gap-2">
-                  <button
-                    onClick={() => openSaved(s.owner, s.repo, s.path)}
-                    className="flex min-w-0 flex-1 items-center gap-2 rounded-sm border border-border bg-card px-3 py-2 text-left text-sm transition-colors hover:bg-secondary"
-                  >
-                    <BookmarkCheck className="size-3.5 shrink-0 text-muted-foreground" />
-                    <span className="min-w-0 truncate">
-                      <span className="text-foreground">
-                        {s.owner}/{s.repo}
-                      </span>
-                      <span className="text-muted-foreground">
-                        {" "}
-                        — {prettyName(s.path.split("/").pop() ?? s.path)}
-                      </span>
-                    </span>
-                  </button>
-                  <button
-                    onClick={() => removeSaved(s.owner, s.repo)}
-                    aria-label={`Remove ${s.owner}/${s.repo} from saved`}
-                    className="rounded-sm p-2 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
-                  >
-                    <X className="size-3.5" />
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+        <div className="mt-6">
+          <SavedForLaterDrawer />
+        </div>
       </div>
     </main>
   );

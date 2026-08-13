@@ -1,6 +1,10 @@
-import { useEffect, useMemo, useState } from "react";
-import { useNavigate } from "@tanstack/react-router";
+import { FileTree } from "@/components/FileTree";
+import { MarkdownView } from "@/components/MarkdownView";
+import { useSavedForLater } from "@/hooks/use-saved-for-later";
+import { useSidebarCollapsed } from "@/hooks/use-sidebar-collapsed";
+import { fetchFile, fetchMarkdownTree, prettyName } from "@/lib/github";
 import { useQuery } from "@tanstack/react-query";
+import { useNavigate } from "@tanstack/react-router";
 import {
   Bookmark,
   BookmarkCheck,
@@ -13,19 +17,8 @@ import {
   PanelLeftOpen,
   X,
 } from "lucide-react";
-import { FileTree } from "@/components/FileTree";
-import { MarkdownView } from "@/components/MarkdownView";
-import { ReaderSettings } from "@/components/ReaderSettings";
-import { fetchFile, fetchMarkdownTree, prettyName } from "@/lib/github";
-import {
-  useBoldText,
-  useGrainBackground,
-  useReaderFont,
-  useReaderSize,
-  useSavedForLater,
-  useSidebarCollapsed,
-  useTheme,
-} from "@/hooks/use-reader-prefs";
+import { useEffect, useMemo, useState } from "react";
+import { SettingControl } from "./SettingControl";
 
 function AppLogo({ className = "size-4" }: { className?: string }) {
   return <img src="/favicon.svg" alt="" className={`${className} rounded-[3px]`} />;
@@ -41,12 +34,7 @@ export function RepoReader({
   activePath: string;
 }) {
   const navigate = useNavigate();
-  const { theme, setTheme } = useTheme();
-  const { size, setSize } = useReaderSize();
-  const { font, setFont } = useReaderFont();
-  const { bold, setBold } = useBoldText();
   const { collapsed, setCollapsed } = useSidebarCollapsed();
-  const { enabled: grain, setEnabled: setGrain } = useGrainBackground();
   const { isSaved, save, toggle: toggleSaved } = useSavedForLater();
 
   const [sidebar, setSidebar] = useState(false);
@@ -93,27 +81,12 @@ export function RepoReader({
     navigate({ to: "/$owner/$repo/$", params: { owner, repo, _splat: path } });
   };
 
-  const readerSettings = (
-    <ReaderSettings
-      theme={theme}
-      setTheme={setTheme}
-      font={font}
-      setFont={setFont}
-      bold={bold}
-      setBold={setBold}
-      size={size}
-      setSize={setSize}
-      grain={grain}
-      setGrain={setGrain}
-    />
-  );
-
   return (
     <div className="flex min-h-screen flex-col">
-      <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-border bg-background/95 px-3 py-2 backdrop-blur sm:px-4">
+      <header className="sticky top-0 z-30 flex items-center gap-3 border-b border-border bg-background/95 px-3 py-2 backdrop-blur sm:px-4 paper-grain">
         <button
           onClick={() => setSidebar((v) => !v)}
-          className="rounded-sm p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground lg:hidden"
+          className="lg:hidden items-center gap-1.5 rounded-sm border border-border bg-card px-2.5 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
           aria-label="Toggle contents"
         >
           {sidebar ? <X className="size-4" /> : <Menu className="size-4" />}
@@ -121,7 +94,7 @@ export function RepoReader({
 
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="hidden rounded-sm p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground lg:block"
+          className="hidden lg:flex items-center gap-1.5 rounded-sm border border-border bg-card px-2.5 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
           aria-label={collapsed ? "Show contents" : "Hide contents"}
           title={collapsed ? "Show contents" : "Hide contents"}
         >
@@ -143,7 +116,7 @@ export function RepoReader({
         <div className="ml-auto flex items-center gap-2">
           <button
             onClick={() => toggleSaved(owner, repo, activePath)}
-            className="rounded-sm p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground"
+            className="flex items-center gap-1.5 rounded-sm border border-border bg-card px-2.5 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
             aria-label={isSaved(owner, repo) ? "Remove from saved" : "Save for later"}
             aria-pressed={isSaved(owner, repo)}
             title={isSaved(owner, repo) ? "Remove from saved" : "Save for later"}
@@ -154,12 +127,12 @@ export function RepoReader({
               <Bookmark className="size-4" />
             )}
           </button>
-          {readerSettings}
+          <SettingControl />
           <a
             href={`https://github.com/${owner}/${repo}`}
             target="_blank"
             rel="noreferrer noopener"
-            className="hidden rounded-sm p-1.5 text-muted-foreground transition-colors hover:bg-secondary hover:text-foreground sm:block"
+            className="flex items-center gap-1.5 rounded-sm border border-border bg-card px-2.5 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
             aria-label="View on GitHub"
           >
             <Github className="size-4" />

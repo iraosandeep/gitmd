@@ -10,12 +10,18 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as SettingsGithubTokenRouteImport } from './routes/settings.github-token'
 import { Route as OwnerRepoIndexRouteImport } from './routes/$owner.$repo.index'
 import { Route as OwnerRepoSplatRouteImport } from './routes/$owner.$repo.$'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const SettingsGithubTokenRoute = SettingsGithubTokenRouteImport.update({
+  id: '/settings/github-token',
+  path: '/settings/github-token',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OwnerRepoIndexRoute = OwnerRepoIndexRouteImport.update({
@@ -31,30 +37,40 @@ const OwnerRepoSplatRoute = OwnerRepoSplatRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/settings/github-token': typeof SettingsGithubTokenRoute
   '/$owner/$repo/$': typeof OwnerRepoSplatRoute
   '/$owner/$repo/': typeof OwnerRepoIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/settings/github-token': typeof SettingsGithubTokenRoute
   '/$owner/$repo/$': typeof OwnerRepoSplatRoute
   '/$owner/$repo': typeof OwnerRepoIndexRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/settings/github-token': typeof SettingsGithubTokenRoute
   '/$owner/$repo/$': typeof OwnerRepoSplatRoute
   '/$owner/$repo/': typeof OwnerRepoIndexRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/$owner/$repo/$' | '/$owner/$repo/'
+  fullPaths:
+    '/' | '/settings/github-token' | '/$owner/$repo/$' | '/$owner/$repo/'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/$owner/$repo/$' | '/$owner/$repo'
-  id: '__root__' | '/' | '/$owner/$repo/$' | '/$owner/$repo/'
+  to: '/' | '/settings/github-token' | '/$owner/$repo/$' | '/$owner/$repo'
+  id:
+    | '__root__'
+    | '/'
+    | '/settings/github-token'
+    | '/$owner/$repo/$'
+    | '/$owner/$repo/'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  SettingsGithubTokenRoute: typeof SettingsGithubTokenRoute
   OwnerRepoSplatRoute: typeof OwnerRepoSplatRoute
   OwnerRepoIndexRoute: typeof OwnerRepoIndexRoute
 }
@@ -66,6 +82,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/settings/github-token': {
+      id: '/settings/github-token'
+      path: '/settings/github-token'
+      fullPath: '/settings/github-token'
+      preLoaderRoute: typeof SettingsGithubTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$owner/$repo/': {
@@ -87,6 +110,7 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  SettingsGithubTokenRoute: SettingsGithubTokenRoute,
   OwnerRepoSplatRoute: OwnerRepoSplatRoute,
   OwnerRepoIndexRoute: OwnerRepoIndexRoute,
 }

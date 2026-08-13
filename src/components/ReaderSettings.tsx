@@ -1,19 +1,13 @@
-import { Check, RotateCcw, Type } from "lucide-react";
+import { Check, ChevronRight, RotateCcw, Settings } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Slider } from "@/components/ui/slider";
 import { Switch } from "@/components/ui/switch";
-import {
-  DEFAULT_BOLD,
-  DEFAULT_FONT,
-  DEFAULT_SIZE,
-  DEFAULT_THEME,
-  FONT_LIST,
-  SIZE_MAX,
-  SIZE_MIN,
-  SIZE_STEP,
-  THEME_LIST,
-  type Theme,
-} from "@/hooks/use-reader-prefs";
+import { DEFAULT_BOLD } from "@/hooks/use-bold-text";
+import { useGitHubToken } from "@/hooks/use-github-token";
+import { DEFAULT_FONT, FONT_LIST } from "@/hooks/use-reader-font";
+import { DEFAULT_SIZE, SIZE_MAX, SIZE_MIN, SIZE_STEP } from "@/hooks/use-reader-size";
+import { DEFAULT_THEME, THEME_LIST, type Theme } from "@/hooks/use-theme";
 
 type Props = {
   theme: Theme;
@@ -40,6 +34,8 @@ export function ReaderSettings({
   grain,
   setGrain,
 }: Props) {
+  const { token: githubToken } = useGitHubToken();
+
   const reset = () => {
     setTheme(DEFAULT_THEME);
     setFont(DEFAULT_FONT);
@@ -52,17 +48,33 @@ export function ReaderSettings({
     <Popover>
       <PopoverTrigger
         className="flex items-center gap-1.5 rounded-sm border border-border bg-card px-2.5 py-1.5 text-muted-foreground transition-colors hover:text-foreground"
-        aria-label="Reading settings"
-        title="Reading settings"
+        aria-label="Settings"
+        title="Settings"
       >
-        <Type className="size-3.5" />
-        <span className="text-[0.7rem] uppercase tracking-widest">Aa</span>
+        <Settings className="size-3.5" />
+        {/*<span className="text-[0.7rem] uppercase tracking-widest">Settings</span>*/}
       </PopoverTrigger>
       <PopoverContent
         align="end"
-        className="w-[19rem] space-y-5"
+        className="w-76 space-y-5 paper-grain"
         onOpenAutoFocus={(e) => e.preventDefault()}
       >
+        {/* GitHub token */}
+        <Link
+          to="/settings/github-token"
+          className="flex items-center justify-between rounded-sm border border-border bg-card px-3 py-2.5 text-left transition-colors hover:bg-secondary"
+        >
+          <span className="min-w-0">
+            <span className="block text-[0.65rem] font-medium uppercase tracking-[0.2em] text-muted-foreground">
+              GitHub token
+            </span>
+            <span className="block text-sm text-foreground">
+              {githubToken ? "Saved — higher rate limit active" : "Not set — optional"}
+            </span>
+          </span>
+          <ChevronRight className="size-4 shrink-0 text-muted-foreground" />
+        </Link>
+
         {/* Theme grid */}
         <section>
           <p className="mb-2 text-[0.65rem] font-medium uppercase tracking-[0.2em] text-muted-foreground">
